@@ -39,65 +39,68 @@
     /* ── NAV ── */
     nav {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  height: 56px;
   z-index: 100;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 40px;
 
-  padding: 0 48px;
-  height: 102px;
+  border-radius: 18px;
+  overflow: hidden;
 
-  background: rgba(255, 255, 255, 0);
-  backdrop-filter: blur(10px) saturate(200%);
-  -webkit-backdrop-filter: blur(10px) saturate(200%);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
 
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-
-  overflow: hidden; /* مهم برای موج نور */
+  border: 1px solid rgba(255, 255, 255, 0.18);
 
   box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 20px 60px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  /* برای نور متحرک */
+  position: fixed;
 }
 
-/* 🌊 موج نور */
+/* 🌊 لایه نور سه‌بعدی + shimmer */
 nav::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: -60%;
-  width: 60%;
-  height: 100%;
+  inset: 0;
+  pointer-events: none;
 
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.25) 50%,
-    transparent 100%
-  );
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(255,255,255,0.18), transparent 45%),
+    linear-gradient(120deg,
+      rgba(255,255,255,0.18),
+      transparent 40%,
+      rgba(255,255,255,0.08)
+    );
 
-  transform: skewX(-20deg);
-  animation: shine 4s infinite;
+  mix-blend-mode: screen;
+
+  animation: navLightMove 6s ease-in-out infinite,
+             navShine 4s linear infinite;
 }
 
-/* 🎬 انیمیشن حرکت نور */
-@keyframes shine {
-  0% {
-    left: -60%;
-  }
-  100% {
-    left: 120%;
-  }
+/* حرکت نرم نور */
+@keyframes navLightMove {
+  0%   { transform: translate(-10px, -6px); opacity: 0.7; }
+  50%  { transform: translate(10px, 6px); opacity: 1; }
+  100% { transform: translate(-10px, -6px); opacity: 0.7; }
 }
-    .nav-brand {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--sub);
-      letter-spacing: 0.08em;
-    }
+
+/* موج نور مورب (shimmer) */
+@keyframes navShine {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
     .nav-links {
       display: flex;
       gap: 32px;
