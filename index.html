@@ -4,23 +4,20 @@
   <link rel="icon" href="favicon.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="محمد امین مرادی، متولد ۱۳۸۳ در کرمانشاه، طراح گرافیک، نقاش، برنامه‌نویس، بازی‌ساز و توسعه‌دهنده نرم‌افزار است. او چندین برنامه کاربردی و دستیار هوشمند را تحت برند ELIPI توسعه داده است.">
+  <meta name="description" content="محمد امین مرادی، متولد ۱۳۸۳ در کرمانشاه، طراح گرافیک، نقاش، برنامه‌نویس، بازی‌ساز و توسعه‌دهنده نرم‌افزار است.">
   <title>محمد امین مرادی</title>
 
-  <!-- Open Graph for social -->
   <meta property="og:title" content="محمد امین مرادی">
-  <meta property="og:description" content="محمد امین مرادی، متولد ۱۳۸۳ در کرمانشاه، طراح گرافیک، نقاش، برنامه‌نویس، بازی‌ساز و توسعه‌دهنده نرم‌افزار است. او چندین برنامه کاربردی و دستیار هوشمند را تحت برند ELIPI توسعه داده است.">
+  <meta property="og:description" content="محمد امین مرادی، متولد ۱۳۸۳ در کرمانشاه، طراح گرافیک، نقاش، برنامه‌نویس، بازی‌ساز و توسعه‌دهنده نرم‌افزار است.">
   <meta property="og:image" content="Amin.jpg">
   <meta property="og:type" content="profile">
   <meta property="og:locale" content="fa_IR">
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="محمد امین مرادی">
   <meta name="twitter:description" content="برنامه‌نویس، نقاش، طراح گرافیک و بازی‌ساز از کرمانشاه">
   <meta name="twitter:image" content="Amin.jpg">
 
-  <!-- Structured Data JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -30,107 +27,428 @@
     "jobTitle": "توسعه‌دهنده نرم‌افزار و طراح گرافیک",
     "birthPlace": "کرمانشاه، ایران",
     "birthDate": "2005-02-18",
-    "url": "https://your-website.com",
-    "brand": {
-      "@type": "Brand",
-      "name": "ELIPI"
-    },
-    "description": "محمد امین مرادی، متولد ۱۳۸۳ در کرمانشاه، طراح گرافیک، نقاش، برنامه‌نویس، بازی‌ساز و توسعه‌دهنده نرم‌افزار است. او چندین برنامه کاربردی و دستیار هوشمند را تحت برند ELIPI توسعه داده است."
+    "brand": { "@type": "Brand", "name": "ELIPI" }
   }
   </script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #060810;
+      --surface:   #0d1117;
+      --card:      #111827;
+      --accent1:   #38bdf8;   /* sky blue */
+      --accent2:   #818cf8;   /* indigo */
+      --accent3:   #f59e0b;   /* amber */
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --glow1:     rgba(56,189,248,0.18);
+      --glow2:     rgba(129,140,248,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
       direction: rtl;
-      background-color: #000;
-      color: #fff;
-      font-family: Tahoma, sans-serif;
-      margin: 0;
-      padding: 0;
-      line-height: 1.8;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Vazirmatn', Tahoma, sans-serif;
+      line-height: 1.9;
+      overflow-x: hidden;
     }
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      background: #111;
-      padding: 20px;
-      border-radius: 16px;
-    }
-    .profile-icon {
-      width: 100px;
-      height: 100px;
+
+    /* ─── Ambient background orbs ─── */
+    .bg-orb {
+      position: fixed;
       border-radius: 50%;
-      float: right;
-      margin-left: 15px;
-      border: 3px solid #fff;
-      transition: color 1s ease, transform 1s ease;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 14s ease-in-out infinite alternate;
     }
-    h1, h2 {
-      color: #00aaff;
-      text-align: right;
+    .bg-orb-1 {
+      width: 500px; height: 500px;
+      background: var(--glow1);
+      top: -150px; right: -150px;
+      animation-delay: 0s;
     }
-    p {
-      text-align: right;
-      color: #ddd;
-      font-size: 16px;
-      transition: color 1s ease, transform 1s ease;
+    .bg-orb-2 {
+      width: 400px; height: 400px;
+      background: var(--glow2);
+      bottom: 10%; left: -100px;
+      animation-delay: -7s;
     }
-    .highlight {
-      font-weight: bold;
-      color: #ffcc00;
-    }
-
-    /* Effect for text */
-    p:hover {
-      transform: scale(0.97);
-      transition: transform 0.7s ease;
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.08); }
     }
 
-    /* Effect for images */
-    img:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-      transition: color 0.7s ease, transform 0.7s ease;
+    /* ─── Layout ─── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
     }
 
-    /* Center the images AminGPT and Amin_ELIPI */
-    .center-img {
-      width: 90%;
-      margin: 20px auto;
+    /* ─── Hero ─── */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-bottom: 60px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 64px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .avatar-ring {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent1), var(--accent2), var(--accent3), var(--accent1));
+      animation: spin-ring 6s linear infinite;
+      z-index: -1;
+    }
+    @keyframes spin-ring {
+      to { transform: rotate(360deg); }
+    }
+    .avatar-ring::after {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
       display: block;
-      border-radius: 24px;             
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-      transition: color 1s ease, transform 1s ease;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.6s cubic-bezier(.34,1.56,.64,1);
+    }
+    .avatar:hover { transform: scale(1.08); }
+
+    .hero-name {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 60%, var(--accent3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .hero-tagline {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 300;
+      letter-spacing: 0.05em;
     }
 
+    /* ─── Skill chips ─── */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+    .chip {
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      transition: background 0.3s, transform 0.3s, border-color 0.3s;
+    }
+    .chip:hover {
+      background: rgba(56,189,248,0.12);
+      border-color: var(--accent1);
+      transform: translateY(-2px);
+    }
+
+    /* ─── Sections ─── */
+    .section {
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s cubic-bezier(.25,.8,.25,1), transform 0.7s cubic-bezier(.25,.8,.25,1);
+    }
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent1);
+      margin-bottom: 10px;
+      opacity: 0.8;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 28px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), box-shadow 0.4s;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, var(--glow1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(56,189,248,0.12);
+    }
+
+    .card p {
+      color: #c8d3e0;
+      font-size: 1rem;
+      line-height: 2;
+    }
+    .card p + p { margin-top: 14px; }
+
+    .highlight {
+      font-weight: 700;
+      color: var(--accent3);
+    }
+    .link-styled {
+      color: var(--accent1);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(56,189,248,0.4);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .link-styled:hover {
+      color: #fff;
+      border-color: #fff;
+    }
+
+    /* ─── Showcase images ─── */
+    .img-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      transition: transform 0.5s cubic-bezier(.34,1.56,.64,1), box-shadow 0.5s;
+    }
+    .img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 60%, rgba(6,8,16,0.6) 100%);
+      pointer-events: none;
+    }
+    .img-wrap:hover {
+      transform: scale(1.02) translateY(-4px);
+      box-shadow: 0 24px 80px rgba(56,189,248,0.18), 0 0 0 1px rgba(56,189,248,0.2);
+    }
+    .img-wrap img {
+      width: 100%;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+    .img-wrap:hover img { transform: scale(1.04); }
+
+    /* ─── Divider ─── */
+    .divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(56,189,248,0.3), rgba(129,140,248,0.3), transparent);
+      margin: 56px 0;
+    }
+
+    /* ─── Brand tag ─── */
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(129,140,248,0.12));
+      border: 1px solid rgba(129,140,248,0.3);
+      border-radius: 10px;
+      padding: 8px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent2);
+      margin-top: 20px;
+    }
+    .brand-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent2);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ─── Reduced motion ─── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .section { opacity: 1; transform: none; }
+    }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 600px) {
+      .card { padding: 20px 18px; }
+      .hero-name { font-size: 2rem; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Ambient orbs -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
   <div class="container">
-    <a>
-      <img src="Amin.jpg" alt="محمد امین مرادی" class="profile-icon">
-    </a>
-    <p>محمد امین مرادی، متولد ۱۳۸۳ در کرمانشاه، طراح گرافیک، نقاش، برنامه‌نویس، بازی‌ساز و توسعه‌دهنده نرم‌افزار است. او چندین برنامه کاربردی و دستیار هوشمند را تحت برند ELIPI توسعه داده است.</p>
-    <br>
-    <p>محمد امین مرادی از جوانان فعال و چندحوزه‌ای کرمانشاه است که در زمینه‌های طراحی گرافیک، نقاشی، برنامه‌نویسی و توسعه بازی‌های دیجیتال فعالیت دارد. او از سال‌های اولیه ورودش به دنیای فناوری، روی پروژه‌های متعددی کار کرده که تلفیقی از هنر و تکنولوژی هستند.</p>
-    <a>
-      <img src="AminGPT.jpg" alt="محمد امین مرادی در معرفی AminGPT" class="center-img">
-    </a>
-    <br>
-    
-    <p>او توانسته است با استفاده از مهارت‌های برنامه‌نویسی خود، چندین نرم‌افزار کاربردی مانند <a href="https://elipideveloper.github.io/AminGPT/">AminGPT</a>، دستیار صوتی امین و مترجم امین امنی را طراحی و توسعه دهد. این پروژه‌ها تحت برند ELIPI عرضه شده‌اند و در حوزه‌های مختلفی مانند هوش مصنوعی، تعامل صوتی و ترجمه فعالیت دارند.
-      <br>
-      او ضمن توجه به طراحی بصری، به توسعه فنی و بهینه‌سازی نرم‌افزارها نیز اهمیت می‌دهد و تلاش می‌کند محصولاتی ارائه دهد که هم از نظر ظاهری جذاب باشند و هم عملکرد قوی و کاربردی داشته باشند.</p>
-    <br>
-    <a>
-      <img src="Amin_ELIPI.jpg" alt="عکس محمد امین مرادی در رونمایی اپلیکیشن های الیپی" class="center-img">
-    </a>
-    <br>
-    <p>علاقه و تخصص محمد امین در ترکیب هنر دیجیتال و برنامه‌نویسی، به او این امکان را می‌دهد که در پروژه‌های بازی‌سازی نیز نقش کلیدی ایفا کند و تجربیات نوآورانه‌ای را برای کاربران خلق کند.
-      <br>
-      محمد امین همواره در حال یادگیری و توسعه مهارت‌های خود است و هدفش ارائه راهکارهای خلاقانه و کاربردی است که بتوانند در زندگی روزمره و کسب‌وکارها تاثیرگذار باشند.</p>
-    <br>
+
+    <!-- ─── Hero ─── -->
+    <header class="hero section" id="hero">
+      <div class="avatar-wrap">
+        <div class="avatar-ring"></div>
+        <img src="Amin.jpg" alt="محمد امین مرادی" class="avatar">
+      </div>
+      <h1 class="hero-name">محمد امین مرادی</h1>
+      <p class="hero-tagline">کرمانشاه · ۱۳۸۳</p>
+      <div class="chips">
+        <span class="chip">طراح گرافیک</span>
+        <span class="chip">نقاش</span>
+        <span class="chip">برنامه‌نویس</span>
+        <span class="chip">بازی‌ساز</span>
+        <span class="chip">توسعه‌دهنده نرم‌افزار</span>
+        <span class="chip">هوش مصنوعی</span>
+      </div>
+    </header>
+
+    <!-- ─── About ─── -->
+    <section class="section" id="about">
+      <div class="section-label">درباره</div>
+      <div class="card">
+        <p>محمد امین مرادی از جوانان فعال و <span class="highlight">چندحوزه‌ای</span> کرمانشاه است که در زمینه‌های طراحی گرافیک، نقاشی، برنامه‌نویسی و توسعه بازی‌های دیجیتال فعالیت دارد. او از سال‌های اولیه ورودش به دنیای فناوری، روی پروژه‌های متعددی کار کرده که تلفیقی از هنر و تکنولوژی هستند.</p>
+        <div class="brand-tag">
+          <span class="brand-dot"></span>
+          برند ELIPI
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── AminGPT image ─── -->
+    <div class="section img-wrap" id="img1">
+      <img src="AminGPT.jpg" alt="محمد امین مرادی در معرفی AminGPT">
+    </div>
+
+    <hr class="divider">
+
+    <!-- ─── Projects ─── -->
+    <section class="section" id="projects">
+      <div class="section-label">پروژه‌ها</div>
+      <div class="card">
+        <p>او توانسته با استفاده از مهارت‌های برنامه‌نویسی خود، چندین نرم‌افزار کاربردی مانند <a href="https://elipideveloper.github.io/AminGPT/" class="link-styled">AminGPT</a>، <span class="highlight">دستیار صوتی امین</span> و <span class="highlight">مترجم امین امنی</span> را طراحی و توسعه دهد.</p>
+        <p>این پروژه‌ها تحت برند <span class="highlight">ELIPI</span> عرضه شده‌اند و در حوزه‌های مختلفی مانند هوش مصنوعی، تعامل صوتی و ترجمه فعالیت دارند.</p>
+        <p>او ضمن توجه به طراحی بصری، به توسعه فنی و بهینه‌سازی نرم‌افزارها نیز اهمیت می‌دهد و تلاش می‌کند محصولاتی ارائه دهد که هم از نظر ظاهری جذاب باشند و هم عملکرد قوی و کاربردی داشته باشند.</p>
+      </div>
+    </section>
+
+    <!-- ─── ELIPI image ─── -->
+    <div class="section img-wrap" id="img2">
+      <img src="Amin_ELIPI.jpg" alt="عکس محمد امین مرادی در رونمایی اپلیکیشن‌های الیپی">
+    </div>
+
+    <hr class="divider">
+
+    <!-- ─── Vision ─── -->
+    <section class="section" id="vision">
+      <div class="section-label">چشم‌انداز</div>
+      <div class="card">
+        <p>علاقه و تخصص محمد امین در ترکیب <span class="highlight">هنر دیجیتال</span> و <span class="highlight">برنامه‌نویسی</span>، به او این امکان را می‌دهد که در پروژه‌های بازی‌سازی نیز نقش کلیدی ایفا کند و تجربیات نوآورانه‌ای را برای کاربران خلق کند.</p>
+        <p>محمد امین همواره در حال یادگیری و توسعه مهارت‌های خود است و هدفش ارائه راهکارهای خلاقانه و کاربردی است که بتوانند در زندگی روزمره و کسب‌وکارها تاثیرگذار باشند.</p>
+      </div>
+    </section>
+
+    <!-- ─── Footer ─── -->
+    <footer class="footer section" id="footer">
+      <p>© ۱۴۰۴ &nbsp;·&nbsp; محمد امین مرادی &nbsp;·&nbsp; برند ELIPI</p>
+    </footer>
+
   </div>
+
+  <script>
+    // ─── Intersection Observer for scroll-triggered reveals ───
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.section').forEach(el => observer.observe(el));
+
+    // ─── Stagger children inside hero ───
+    document.querySelectorAll('.hero .chips .chip').forEach((chip, i) => {
+      chip.style.transitionDelay = `${0.05 * i}s`;
+      chip.style.opacity = '0';
+      chip.style.transform = 'translateY(12px)';
+      chip.style.transition = `opacity 0.5s ease ${0.4 + i * 0.07}s, transform 0.5s ease ${0.4 + i * 0.07}s`;
+    });
+
+    // Trigger hero on load
+    window.addEventListener('load', () => {
+      const hero = document.getElementById('hero');
+      hero.classList.add('visible');
+      setTimeout(() => {
+        document.querySelectorAll('.hero .chips .chip').forEach(chip => {
+          chip.style.opacity = '1';
+          chip.style.transform = 'translateY(0)';
+        });
+      }, 300);
+    });
+
+    // ─── Parallax on bg orbs with mouse ───
+    document.addEventListener('mousemove', e => {
+      const cx = e.clientX / window.innerWidth - 0.5;
+      const cy = e.clientY / window.innerHeight - 0.5;
+      document.querySelector('.bg-orb-1').style.transform = `translate(${cx * 30}px, ${cy * 20}px)`;
+      document.querySelector('.bg-orb-2').style.transform = `translate(${cx * -20}px, ${cy * -15}px)`;
+    });
+  </script>
 </body>
 </html>
-
