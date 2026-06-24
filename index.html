@@ -12,7 +12,6 @@
   <meta property="og:image" content="Amin.jpg">
   <meta property="og:type" content="profile">
   <meta property="og:locale" content="fa_IR">
-
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="محمد امین مرادی">
   <meta name="twitter:description" content="برنامه‌نویس، نقاش، طراح گرافیک و بازی‌ساز از کرمانشاه">
@@ -32,22 +31,32 @@
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #060810;
-      --surface:   #0d1117;
-      --card:      #111827;
-      --accent1:   #38bdf8;   /* sky blue */
-      --accent2:   #818cf8;   /* indigo */
-      --accent3:   #f59e0b;   /* amber */
-      --text:      #e2e8f0;
-      --muted:     #64748b;
-      --glow1:     rgba(56,189,248,0.18);
-      --glow2:     rgba(129,140,248,0.15);
+      --bg:      #050508;
+      --card:    rgba(255,255,255,0.035);
+      --border:  rgba(255,255,255,0.07);
+      --a1:      #5ac8fa;   /* apple blue  */
+      --a2:      #bf5af2;   /* apple purple */
+      --a3:      #ffd60a;   /* apple yellow */
+      --text:    #f5f5f7;
+      --sub:     rgba(245,245,247,0.56);
+      --muted:   rgba(245,245,247,0.32);
+
+      /* Apple-style easing */
+      --ease-out:    cubic-bezier(0.25, 0.1, 0.25, 1);
+      --ease-apple:  cubic-bezier(0.42, 0, 0.18, 1);
+      --ease-spring: cubic-bezier(0.34, 1.1, 0.64, 1);
+
+      /* Durations — slower = smoother feel */
+      --dur-fast:   0.5s;
+      --dur-mid:    0.9s;
+      --dur-slow:   1.2s;
     }
 
     html { scroll-behavior: smooth; }
@@ -56,299 +65,439 @@
       direction: rtl;
       background: var(--bg);
       color: var(--text);
-      font-family: 'Vazirmatn', Tahoma, sans-serif;
-      line-height: 1.9;
+      font-family: 'Vazirmatn', -apple-system, Tahoma, sans-serif;
+      line-height: 1.85;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── Ambient background orbs ─── */
-    .bg-orb {
+    /* ── Subtle noise texture overlay ── */
+    body::before {
+      content: '';
       position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.018;
       pointer-events: none;
       z-index: 0;
-      animation: drift 14s ease-in-out infinite alternate;
-    }
-    .bg-orb-1 {
-      width: 500px; height: 500px;
-      background: var(--glow1);
-      top: -150px; right: -150px;
-      animation-delay: 0s;
-    }
-    .bg-orb-2 {
-      width: 400px; height: 400px;
-      background: var(--glow2);
-      bottom: 10%; left: -100px;
-      animation-delay: -7s;
-    }
-    @keyframes drift {
-      from { transform: translate(0, 0) scale(1); }
-      to   { transform: translate(40px, 30px) scale(1.08); }
     }
 
-    /* ─── Layout ─── */
+    /* ── Ambient gradient — very slow drift ── */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .ambient-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      will-change: transform;
+      animation: blob-drift var(--dur, 22s) ease-in-out infinite alternate;
+    }
+    .blob-1 {
+      --dur: 26s;
+      width: 680px; height: 680px;
+      background: radial-gradient(circle, rgba(90,200,250,0.07) 0%, transparent 70%);
+      top: -200px; right: -180px;
+    }
+    .blob-2 {
+      --dur: 32s;
+      width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(191,90,242,0.06) 0%, transparent 70%);
+      bottom: -100px; left: -160px;
+      animation-delay: -14s;
+    }
+    .blob-3 {
+      --dur: 20s;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(255,214,10,0.04) 0%, transparent 70%);
+      top: 45%; left: 40%;
+      animation-delay: -8s;
+    }
+    @keyframes blob-drift {
+      0%   { transform: translate(0px,   0px)   scale(1);    }
+      33%  { transform: translate(30px, -20px)  scale(1.05); }
+      66%  { transform: translate(-20px, 25px)  scale(0.97); }
+      100% { transform: translate(15px,  10px)  scale(1.03); }
+    }
+
+    /* ── Layout ── */
     .container {
       position: relative;
       z-index: 1;
-      max-width: 860px;
+      max-width: 820px;
       margin: 0 auto;
-      padding: 60px 24px 80px;
+      padding: 80px 24px 100px;
     }
 
-    /* ─── Hero ─── */
+    /* ══════════════════════════════
+       SCROLL REVEAL
+       Each .reveal starts invisible
+       and transitions in when .in fires
+    ══════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition:
+        opacity    var(--dur-slow)  var(--ease-apple),
+        transform  var(--dur-slow)  var(--ease-apple);
+      will-change: opacity, transform;
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* stagger siblings */
+    .reveal:nth-child(2) { transition-delay: 0.08s; }
+    .reveal:nth-child(3) { transition-delay: 0.16s; }
+    .reveal:nth-child(4) { transition-delay: 0.24s; }
+    .reveal:nth-child(5) { transition-delay: 0.32s; }
+    .reveal:nth-child(6) { transition-delay: 0.40s; }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
     .hero {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding-bottom: 60px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 64px;
+      padding-bottom: 72px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 80px;
+      gap: 0;
     }
 
+    /* Avatar */
     .avatar-wrap {
       position: relative;
-      margin-bottom: 28px;
+      width: 128px;
+      height: 128px;
+      margin-bottom: 32px;
     }
-    .avatar-ring {
-      position: absolute;
-      inset: -8px;
-      border-radius: 50%;
-      background: conic-gradient(var(--accent1), var(--accent2), var(--accent3), var(--accent1));
-      animation: spin-ring 6s linear infinite;
-      z-index: -1;
-    }
-    @keyframes spin-ring {
-      to { transform: rotate(360deg); }
-    }
-    .avatar-ring::after {
+    /* Soft halo — not a spinning ring, subtle glow instead */
+    .avatar-wrap::before {
       content: '';
       position: absolute;
-      inset: 4px;
+      inset: -14px;
       border-radius: 50%;
-      background: var(--bg);
+      background: conic-gradient(
+        from 0deg,
+        rgba(90,200,250,0.5),
+        rgba(191,90,242,0.4),
+        rgba(255,214,10,0.3),
+        rgba(90,200,250,0.5)
+      );
+      filter: blur(16px);
+      opacity: 0.55;
+      animation: halo-spin 12s linear infinite;
+    }
+    @keyframes halo-spin {
+      to { transform: rotate(360deg); }
     }
     .avatar {
-      width: 120px;
-      height: 120px;
+      width: 128px;
+      height: 128px;
       border-radius: 50%;
       object-fit: cover;
       display: block;
       position: relative;
       z-index: 1;
-      transition: transform 0.6s cubic-bezier(.34,1.56,.64,1);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      transition: transform var(--dur-mid) var(--ease-spring);
+      will-change: transform;
     }
-    .avatar:hover { transform: scale(1.08); }
+    .avatar:hover { transform: scale(1.05); }
 
     .hero-name {
-      font-size: clamp(2rem, 6vw, 3.2rem);
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 60%, var(--accent3) 100%);
+      font-size: clamp(2.2rem, 7vw, 3.8rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      /* Animated gradient */
+      background: linear-gradient(
+        120deg,
+        var(--a1) 0%,
+        var(--a2) 45%,
+        var(--a3) 80%,
+        var(--a1) 100%
+      );
+      background-size: 220% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      line-height: 1.3;
-      margin-bottom: 10px;
+      animation: gradient-shift 8s linear infinite;
     }
-    .hero-tagline {
-      font-size: 1rem;
-      color: var(--muted);
-      font-weight: 300;
-      letter-spacing: 0.05em;
+    @keyframes gradient-shift {
+      to { background-position: 220% center; }
     }
 
-    /* ─── Skill chips ─── */
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--sub);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      margin-bottom: 32px;
+    }
+
+    /* Chips */
     .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
-      margin-top: 24px;
     }
     .chip {
-      padding: 6px 18px;
+      padding: 7px 20px;
       border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      transition: background 0.3s, transform 0.3s, border-color 0.3s;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--sub);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition:
+        background  var(--dur-fast) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        color        var(--dur-fast) var(--ease-out),
+        transform    var(--dur-fast) var(--ease-spring);
+      will-change: transform;
     }
     .chip:hover {
-      background: rgba(56,189,248,0.12);
-      border-color: var(--accent1);
-      transform: translateY(-2px);
+      background: rgba(90,200,250,0.1);
+      border-color: rgba(90,200,250,0.35);
+      color: var(--a1);
+      transform: translateY(-3px);
     }
 
-    /* ─── Sections ─── */
-    .section {
-      margin-bottom: 64px;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.7s cubic-bezier(.25,.8,.25,1), transform 0.7s cubic-bezier(.25,.8,.25,1);
-    }
-    .section.visible {
-      opacity: 1;
-      transform: translateY(0);
+    /* ══════════════════════════════
+       SECTIONS
+    ══════════════════════════════ */
+    .block {
+      margin-bottom: 72px;
     }
 
-    .section-label {
-      font-size: 0.72rem;
+    .eyebrow {
+      font-size: 0.68rem;
       font-weight: 600;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--accent1);
-      margin-bottom: 10px;
-      opacity: 0.8;
+      color: var(--a1);
+      opacity: 0.7;
+      margin-bottom: 14px;
     }
 
+    /* Glass card — Apple frosted look */
     .card {
       background: var(--card);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px;
-      padding: 28px 32px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 32px 36px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       position: relative;
       overflow: hidden;
-      transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), box-shadow 0.4s;
+      transition:
+        transform    var(--dur-mid)  var(--ease-spring),
+        box-shadow   var(--dur-mid)  var(--ease-apple),
+        border-color var(--dur-mid)  var(--ease-apple);
+      will-change: transform;
     }
+    /* Inner specular highlight */
     .card::before {
       content: '';
       position: absolute;
-      top: 0; right: 0;
-      width: 120px; height: 120px;
-      background: radial-gradient(circle, var(--glow1) 0%, transparent 70%);
-      opacity: 0;
-      transition: opacity 0.4s;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
       pointer-events: none;
     }
-    .card:hover::before { opacity: 1; }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(56,189,248,0.12);
+    /* Radial glow that follows mouse — handled in JS */
+    .card::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(90,200,250,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.8s var(--ease-apple);
+      z-index: 0;
     }
+    .card:hover::after { opacity: 1; }
+    .card:hover {
+      transform: translateY(-6px) scale(1.005);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.1),
+        0 8px 24px rgba(0,0,0,0.25),
+        0 24px 64px rgba(0,0,0,0.3),
+        0 0 0 1px rgba(90,200,250,0.08);
+      border-color: rgba(90,200,250,0.14);
+    }
+
+    .card-inner { position: relative; z-index: 1; }
 
     .card p {
-      color: #c8d3e0;
+      color: var(--sub);
       font-size: 1rem;
-      line-height: 2;
+      line-height: 1.95;
     }
-    .card p + p { margin-top: 14px; }
+    .card p + p { margin-top: 16px; }
 
-    .highlight {
-      font-weight: 700;
-      color: var(--accent3);
+    em.hl {
+      font-style: normal;
+      font-weight: 600;
+      color: var(--text);
     }
-    .link-styled {
-      color: var(--accent1);
+    a.lnk {
+      color: var(--a1);
       text-decoration: none;
-      border-bottom: 1px dashed rgba(56,189,248,0.4);
-      transition: color 0.2s, border-color 0.2s;
+      border-bottom: 1px solid rgba(90,200,250,0.3);
+      transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
     }
-    .link-styled:hover {
-      color: #fff;
-      border-color: #fff;
+    a.lnk:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+
+    /* Brand pill */
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 22px;
+      padding: 7px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(191,90,242,0.25);
+      background: rgba(191,90,242,0.07);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--a2);
+      backdrop-filter: blur(8px);
+    }
+    .brand-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--a2);
+      animation: breathe 3s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { transform: scale(1);   opacity: 1; }
+      50%       { transform: scale(0.6); opacity: 0.3; }
     }
 
-    /* ─── Showcase images ─── */
-    .img-wrap {
-      border-radius: 20px;
-      overflow: hidden;
+    /* ══════════════════════════════
+       IMAGES — parallax scroll
+    ══════════════════════════════ */
+    .img-scene {
       position: relative;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-      transition: transform 0.5s cubic-bezier(.34,1.56,.64,1), box-shadow 0.5s;
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 72px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 20px 60px rgba(0,0,0,0.3);
+      transition:
+        transform   var(--dur-mid)  var(--ease-spring),
+        box-shadow  var(--dur-mid)  var(--ease-apple);
+      will-change: transform;
     }
-    .img-wrap::after {
+    .img-scene:hover {
+      transform: scale(1.012) translateY(-6px);
+      box-shadow:
+        0 4px 20px rgba(0,0,0,0.4),
+        0 30px 80px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(90,200,250,0.1);
+    }
+    .img-scene img {
+      width: 100%;
+      display: block;
+      transition: transform 1.4s var(--ease-apple);
+      will-change: transform;
+    }
+    .img-scene:hover img { transform: scale(1.03); }
+    /* Bottom fade */
+    .img-scene::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, transparent 60%, rgba(6,8,16,0.6) 100%);
+      background: linear-gradient(
+        to bottom,
+        transparent 55%,
+        rgba(5,5,8,0.55) 100%
+      );
       pointer-events: none;
     }
-    .img-wrap:hover {
-      transform: scale(1.02) translateY(-4px);
-      box-shadow: 0 24px 80px rgba(56,189,248,0.18), 0 0 0 1px rgba(56,189,248,0.2);
-    }
-    .img-wrap img {
-      width: 100%;
-      display: block;
-      transition: transform 0.6s ease;
-    }
-    .img-wrap:hover img { transform: scale(1.04); }
 
-    /* ─── Divider ─── */
-    .divider {
+    /* ══════════════════════════════
+       DIVIDER
+    ══════════════════════════════ */
+    .sep {
       border: none;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(56,189,248,0.3), rgba(129,140,248,0.3), transparent);
-      margin: 56px 0;
+      background: linear-gradient(
+        to right,
+        transparent,
+        rgba(90,200,250,0.2),
+        rgba(191,90,242,0.2),
+        transparent
+      );
+      margin: 72px 0;
     }
 
-    /* ─── Brand tag ─── */
-    .brand-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(129,140,248,0.12));
-      border: 1px solid rgba(129,140,248,0.3);
-      border-radius: 10px;
-      padding: 8px 18px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--accent2);
-      margin-top: 20px;
-    }
-    .brand-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--accent2);
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.7); }
-    }
-
-    /* ─── Footer ─── */
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
     .footer {
       text-align: center;
       color: var(--muted);
-      font-size: 0.82rem;
-      padding-top: 40px;
-      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.78rem;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
     }
 
-    /* ─── Reduced motion ─── */
+    /* ══════════════════════════════
+       REDUCED MOTION
+    ══════════════════════════════ */
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-      .section { opacity: 1; transform: none; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal { opacity: 1; transform: none; }
     }
 
-    /* ─── Mobile ─── */
+    /* ══════════════════════════════
+       MOBILE
+    ══════════════════════════════ */
     @media (max-width: 600px) {
-      .card { padding: 20px 18px; }
-      .hero-name { font-size: 2rem; }
+      .container { padding: 48px 16px 64px; }
+      .card { padding: 22px 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient orbs -->
-  <div class="bg-orb bg-orb-1"></div>
-  <div class="bg-orb bg-orb-2"></div>
+  <!-- Ambient gradient background -->
+  <div class="ambient">
+    <div class="ambient-blob blob-1"></div>
+    <div class="ambient-blob blob-2"></div>
+    <div class="ambient-blob blob-3"></div>
+  </div>
 
   <div class="container">
 
-    <!-- ─── Hero ─── -->
-    <header class="hero section" id="hero">
-      <div class="avatar-wrap">
-        <div class="avatar-ring"></div>
+    <!-- ── Hero ── -->
+    <header class="hero">
+      <div class="avatar-wrap reveal">
         <img src="Amin.jpg" alt="محمد امین مرادی" class="avatar">
       </div>
-      <h1 class="hero-name">محمد امین مرادی</h1>
-      <p class="hero-tagline">کرمانشاه · ۱۳۸۳</p>
-      <div class="chips">
+      <h1 class="hero-name reveal">محمد امین مرادی</h1>
+      <p class="hero-sub reveal">کرمانشاه &nbsp;·&nbsp; ۱۳۸۳</p>
+      <div class="chips reveal">
         <span class="chip">طراح گرافیک</span>
         <span class="chip">نقاش</span>
         <span class="chip">برنامه‌نویس</span>
@@ -358,97 +507,158 @@
       </div>
     </header>
 
-    <!-- ─── About ─── -->
-    <section class="section" id="about">
-      <div class="section-label">درباره</div>
-      <div class="card">
-        <p>محمد امین مرادی از جوانان فعال و <span class="highlight">چندحوزه‌ای</span> کرمانشاه است که در زمینه‌های طراحی گرافیک، نقاشی، برنامه‌نویسی و توسعه بازی‌های دیجیتال فعالیت دارد. او از سال‌های اولیه ورودش به دنیای فناوری، روی پروژه‌های متعددی کار کرده که تلفیقی از هنر و تکنولوژی هستند.</p>
-        <div class="brand-tag">
-          <span class="brand-dot"></span>
-          برند ELIPI
+    <!-- ── About ── -->
+    <div class="block reveal">
+      <p class="eyebrow">درباره</p>
+      <div class="card" data-glow>
+        <div class="card-inner">
+          <p>محمد امین مرادی از جوانان فعال و <em class="hl">چندحوزه‌ای</em> کرمانشاه است که در زمینه‌های طراحی گرافیک، نقاشی، برنامه‌نویسی و توسعه بازی‌های دیجیتال فعالیت دارد. او از سال‌های اولیه ورودش به دنیای فناوری، روی پروژه‌های متعددی کار کرده که تلفیقی از هنر و تکنولوژی هستند.</p>
+          <div class="brand-pill">
+            <span class="brand-dot"></span>
+            برند ELIPI
+          </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- ─── AminGPT image ─── -->
-    <div class="section img-wrap" id="img1">
+    <!-- ── Image: AminGPT ── -->
+    <div class="img-scene reveal">
       <img src="AminGPT.jpg" alt="محمد امین مرادی در معرفی AminGPT">
     </div>
 
-    <hr class="divider">
+    <hr class="sep">
 
-    <!-- ─── Projects ─── -->
-    <section class="section" id="projects">
-      <div class="section-label">پروژه‌ها</div>
-      <div class="card">
-        <p>او توانسته با استفاده از مهارت‌های برنامه‌نویسی خود، چندین نرم‌افزار کاربردی مانند <a href="https://elipideveloper.github.io/AminGPT/" class="link-styled">AminGPT</a>، <span class="highlight">دستیار صوتی امین</span> و <span class="highlight">مترجم امین امنی</span> را طراحی و توسعه دهد.</p>
-        <p>این پروژه‌ها تحت برند <span class="highlight">ELIPI</span> عرضه شده‌اند و در حوزه‌های مختلفی مانند هوش مصنوعی، تعامل صوتی و ترجمه فعالیت دارند.</p>
-        <p>او ضمن توجه به طراحی بصری، به توسعه فنی و بهینه‌سازی نرم‌افزارها نیز اهمیت می‌دهد و تلاش می‌کند محصولاتی ارائه دهد که هم از نظر ظاهری جذاب باشند و هم عملکرد قوی و کاربردی داشته باشند.</p>
+    <!-- ── Projects ── -->
+    <div class="block reveal">
+      <p class="eyebrow">پروژه‌ها</p>
+      <div class="card" data-glow>
+        <div class="card-inner">
+          <p>او توانسته با استفاده از مهارت‌های برنامه‌نویسی خود، چندین نرم‌افزار کاربردی مانند <a href="https://elipideveloper.github.io/AminGPT/" class="lnk">AminGPT</a>، <em class="hl">دستیار صوتی امین</em> و <em class="hl">مترجم امین امنی</em> را طراحی و توسعه دهد.</p>
+          <p>این پروژه‌ها تحت برند <em class="hl">ELIPI</em> عرضه شده‌اند و در حوزه‌های مختلفی مانند هوش مصنوعی، تعامل صوتی و ترجمه فعالیت دارند.</p>
+          <p>او ضمن توجه به طراحی بصری، به توسعه فنی و بهینه‌سازی نرم‌افزارها نیز اهمیت می‌دهد و تلاش می‌کند محصولاتی ارائه دهد که هم از نظر ظاهری جذاب باشند و هم عملکرد قوی و کاربردی داشته باشند.</p>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <!-- ─── ELIPI image ─── -->
-    <div class="section img-wrap" id="img2">
+    <!-- ── Image: ELIPI ── -->
+    <div class="img-scene reveal">
       <img src="Amin_ELIPI.jpg" alt="عکس محمد امین مرادی در رونمایی اپلیکیشن‌های الیپی">
     </div>
 
-    <hr class="divider">
+    <hr class="sep">
 
-    <!-- ─── Vision ─── -->
-    <section class="section" id="vision">
-      <div class="section-label">چشم‌انداز</div>
-      <div class="card">
-        <p>علاقه و تخصص محمد امین در ترکیب <span class="highlight">هنر دیجیتال</span> و <span class="highlight">برنامه‌نویسی</span>، به او این امکان را می‌دهد که در پروژه‌های بازی‌سازی نیز نقش کلیدی ایفا کند و تجربیات نوآورانه‌ای را برای کاربران خلق کند.</p>
-        <p>محمد امین همواره در حال یادگیری و توسعه مهارت‌های خود است و هدفش ارائه راهکارهای خلاقانه و کاربردی است که بتوانند در زندگی روزمره و کسب‌وکارها تاثیرگذار باشند.</p>
+    <!-- ── Vision ── -->
+    <div class="block reveal">
+      <p class="eyebrow">چشم‌انداز</p>
+      <div class="card" data-glow>
+        <div class="card-inner">
+          <p>علاقه و تخصص محمد امین در ترکیب <em class="hl">هنر دیجیتال</em> و <em class="hl">برنامه‌نویسی</em>، به او این امکان را می‌دهد که در پروژه‌های بازی‌سازی نیز نقش کلیدی ایفا کند و تجربیات نوآورانه‌ای را برای کاربران خلق کند.</p>
+          <p>محمد امین همواره در حال یادگیری و توسعه مهارت‌های خود است و هدفش ارائه راهکارهای خلاقانه و کاربردی است که بتوانند در زندگی روزمره و کسب‌وکارها تاثیرگذار باشند.</p>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <!-- ─── Footer ─── -->
-    <footer class="footer section" id="footer">
+    <!-- ── Footer ── -->
+    <footer class="footer reveal">
       <p>© ۱۴۰۴ &nbsp;·&nbsp; محمد امین مرادی &nbsp;·&nbsp; برند ELIPI</p>
     </footer>
 
   </div>
 
   <script>
-    // ─── Intersection Observer for scroll-triggered reveals ───
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+    /* ─────────────────────────────────────────────
+       1. Scroll-reveal with IntersectionObserver
+          Threshold 0.08 = starts early, feels natural
+       ───────────────────────────────────────────── */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target); // fire once
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.section').forEach(el => observer.observe(el));
-
-    // ─── Stagger children inside hero ───
-    document.querySelectorAll('.hero .chips .chip').forEach((chip, i) => {
-      chip.style.transitionDelay = `${0.05 * i}s`;
-      chip.style.opacity = '0';
-      chip.style.transform = 'translateY(12px)';
-      chip.style.transition = `opacity 0.5s ease ${0.4 + i * 0.07}s, transform 0.5s ease ${0.4 + i * 0.07}s`;
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      // Stagger siblings in hero manually
+      if (el.closest('.hero')) {
+        el.style.transitionDelay = `${i * 0.12}s`;
+      }
+      io.observe(el);
     });
 
-    // Trigger hero on load
-    window.addEventListener('load', () => {
-      const hero = document.getElementById('hero');
-      hero.classList.add('visible');
-      setTimeout(() => {
-        document.querySelectorAll('.hero .chips .chip').forEach(chip => {
-          chip.style.opacity = '1';
-          chip.style.transform = 'translateY(0)';
-        });
-      }, 300);
+    /* ─────────────────────────────────────────────
+       2. Trigger above-fold elements immediately
+       ───────────────────────────────────────────── */
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.reveal').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) el.classList.add('in');
+      });
     });
 
-    // ─── Parallax on bg orbs with mouse ───
+    /* ─────────────────────────────────────────────
+       3. Card mouse-glow — tracks cursor position
+          Very Apple: subtle inner radial follows pointer
+       ───────────────────────────────────────────── */
+    document.querySelectorAll('[data-glow]').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        card.style.setProperty('--mx', x + 'px');
+        card.style.setProperty('--my', y + 'px');
+        const pseudo = card.querySelector('*')?.parentElement;
+        card.style.backgroundImage =
+          `radial-gradient(400px circle at ${x}px ${y}px, rgba(90,200,250,0.04), transparent 60%)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.backgroundImage = '';
+      });
+    });
+
+    /* ─────────────────────────────────────────────
+       4. Ambient blobs — smooth mouse parallax
+          requestAnimationFrame lerp for buttery feel
+       ───────────────────────────────────────────── */
+    let mx = 0, my = 0;
+    let cx = 0, cy = 0;
+    const blob1 = document.querySelector('.blob-1');
+    const blob2 = document.querySelector('.blob-2');
+
     document.addEventListener('mousemove', e => {
-      const cx = e.clientX / window.innerWidth - 0.5;
-      const cy = e.clientY / window.innerHeight - 0.5;
-      document.querySelector('.bg-orb-1').style.transform = `translate(${cx * 30}px, ${cy * 20}px)`;
-      document.querySelector('.bg-orb-2').style.transform = `translate(${cx * -20}px, ${cy * -15}px)`;
+      mx = (e.clientX / window.innerWidth  - 0.5);
+      my = (e.clientY / window.innerHeight - 0.5);
     });
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function rafLoop() {
+      cx = lerp(cx, mx, 0.028);
+      cy = lerp(cy, my, 0.028);
+      blob1.style.transform = `translate(${cx * 50}px, ${cy * 35}px)`;
+      blob2.style.transform = `translate(${cx * -35}px, ${cy * -25}px)`;
+      requestAnimationFrame(rafLoop);
+    }
+    rafLoop();
+
+    /* ─────────────────────────────────────────────
+       5. Image parallax on scroll — Apple product page feel
+       ───────────────────────────────────────────── */
+    const imgScenes = document.querySelectorAll('.img-scene img');
+
+    function onScroll() {
+      imgScenes.forEach(img => {
+        const rect = img.closest('.img-scene').getBoundingClientRect();
+        const vh = window.innerHeight;
+        const progress = 1 - (rect.top + rect.height) / (vh + rect.height);
+        const shift = (progress - 0.5) * 30; // max ±15px
+        img.style.transform = `translateY(${shift}px) scale(1.06)`;
+      });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   </script>
 </body>
 </html>
